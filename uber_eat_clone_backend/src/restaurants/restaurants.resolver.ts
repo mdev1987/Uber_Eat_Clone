@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateRestaurantInput } from './dto/create-restaurant.input';
+import { CreateRestaurantDto } from './dto/create-restaurant.input';
 import { Restaurant } from './restaurants.entity';
 
 @Resolver()
@@ -13,9 +13,7 @@ export class RestaurantsResolver {
   }
 
   @Mutation(() => Restaurant)
-  createRestaurant(
-    @Args('createRestaurant') createRestaurant: CreateRestaurantInput,
-  ) {
+  createRestaurant(@Args() createRestaurant: CreateRestaurantDto) {
     const restaurant = new Restaurant();
     Object.assign(restaurant, createRestaurant);
     return restaurant;
