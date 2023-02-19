@@ -1,21 +1,29 @@
+import { ParseIntPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateRestaurantDto } from './dto/create-restaurant.input';
-import { Restaurant } from './restaurants.entity';
-
+import { UpdateRestaurantDto } from './dto/udate-restaurant.input';
+import { Restaurant } from './entities/restaurants.entity';
+import { RestaurantsService } from './restaurants.service';
 @Resolver()
 export class RestaurantsResolver {
+  constructor(private readonly restaurantsService: RestaurantsService) {}
   @Query(() => [Restaurant])
-  getRestaurants(@Args('veganOnly') veganOnly: boolean) {
-    const restaurants = new Restaurant();
-    restaurants.name = 'Restaurants';
-    restaurants.isVegan = veganOnly;
-    return [restaurants];
+  getRestaurants() {
+    return this.restaurantsService.getAll();
   }
 
   @Mutation(() => Restaurant)
-  createRestaurant(@Args() createRestaurant: CreateRestaurantDto) {
-    const restaurant = new Restaurant();
-    Object.assign(restaurant, createRestaurant);
-    return restaurant;
+  createRestaurant(@Args('restaurant') restaurant: CreateRestaurantDto) {
+    return this.restaurantsService.createRestaurant(restaurant);
+  }
+
+  @Mutation(() => Restaurant)
+  updateRestaurant(@Args('restaurant') restaurant: UpdateRestaurantDto) {
+    return this.restaurantsService.updateRestaurant(restaurant);
+  }
+
+  @Mutation(() => Restaurant)
+  deleteRestaurant(@Args('id', ParseIntPipe) id: number) {
+    return this.restaurantsService.deleteRestaurant(id);
   }
 }
