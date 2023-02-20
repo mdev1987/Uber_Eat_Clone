@@ -7,7 +7,9 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { Restaurant } from './restaurants/entities/restaurants.entity';
+import { UsersModule } from './users/users.module';
 import { JwtModule } from './jwt/jwt.module';
+import { Users } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -38,10 +40,11 @@ import { JwtModule } from './jwt/jwt.module';
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
       autoLoadEntities: true,
-      entities: [Restaurant],
+      entities: [Restaurant, Users],
     }),
     RestaurantsModule,
     JwtModule.forRoot({ privateKey: process.env.JWT_SECRET }),
+    UsersModule,
   ],
   controllers: [],
   providers: [],
